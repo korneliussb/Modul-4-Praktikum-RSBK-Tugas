@@ -4,36 +4,51 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html">
     <h:head>
         <title>JSF RSBK</title>
+        <style>
+            body {
+                background-image: url("bromo.jpg")
+            }
+
+        </style>
     </h:head>
     <h:body>
+
         <center>
-             <h2>Tambah Data Mahasiswa</h2>
-             
+            <h2>Tambah Data Mahasiswa</h2>
+
             <h:form>
-            <table>
-            <tr>
-               <td>NIM :</td>
-               <td><h:inputText value="#{mahasiswa.NIM}" ></h:inputText></td>
-            </tr>
-            <tr>
-               <td>Nama Mahasiswa :</td>
-               <td><h:inputText value="#{mahasiswa.NAMA}" ></h:inputText></td>
-            </tr>
-            <tr>
-               <td>Penjurusan :</td>
-               <td><h:inputText value="#{mahasiswa.PENJURUSAN}"></h:inputText></td>
-            </tr>
-            </table>
+                <table>
+                    <tr>
+                        <td>NIM :</td>
+                        <td><h:inputText value="#{Mahasiswa.NIM}" ></h:inputText></td>
+                    </tr>
+                    <tr>
+                        <td>Nama Mahasiswa :</td>
+                        <td><h:inputText value="#{Mahasiswa.NAMA}" ></h:inputText></td>
+                    </tr>
+                    <tr>
+                        <td>Penjurusan :</td>
+                        <td><h:inputText value="#{Mahasiswa.PENJURUSAN}"></h:inputText></td>
+                    </tr>  
+                    <tr>
+                        <td>1 - Multimedia</td>
+                        <td>2 - Embedded</td>
+                    </tr>
+                    <tr>
+                        <td>3 - Software</td>
+                        <td>4 - Jaringan</td>
+                    </tr>
+                </table>
                 <br></br>
-                <h:commandButton value="Tambahkan" action="#{mahasiswa.Tambah_Mahasiswa}"></h:commandButton>
-              <br></br>
-              <br></br>
+                <h:commandButton value="Tambahkan" action="#{Mahasiswa.Tambah_Mahasiswa}"></h:commandButton>
+                <br></br>
+                <br></br>
             </h:form>
-                    <h:form>
-                   <h:commandButton value="Kembali" action="index.xhtml"></h:commandButton>
-       </h:form>
+            <h:form>
+                <h:commandButton value="Kembali" action="index.xhtml"></h:commandButton>
+            </h:form>
         </center>
-                   
+
     </h:body>
 </html>
 

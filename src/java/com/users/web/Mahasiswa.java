@@ -14,15 +14,20 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 
 /**
  *
- * @author Knight-Son
+ * @author user
  */
-@ManagedBean
+@ManagedBean(name = "Mahasiswa")
 @RequestScoped
 public class Mahasiswa {
-
+    
+    
+    
+    
     /**
      * Creates a new instance of Mahasiswa
      */
@@ -66,7 +71,7 @@ public class Mahasiswa {
           rs.next();
           obj_Mahasiswa.setNIM(rs.getString("NIM"));
           obj_Mahasiswa.setNAMA(rs.getString("Nama"));
-          obj_Mahasiswa.setPENJURUSAN(rs.getString("Penjurusan"));
+          obj_Mahasiswa.setPENJURUSAN(rs.getString("id_penjurusan"));
           sessionMap.put("EditMahasiswa", obj_Mahasiswa);  
       } catch (Exception e) {
             System.out.println(e);
@@ -97,36 +102,70 @@ public class Mahasiswa {
       String Update_NIM= params.get("Update_NIM");
       
       try {
-          Koneksi obj_koneksi = new Koneksi();
-          Connection connection = obj_koneksi.get_connection();
-          PreparedStatement ps = connection.prepareStatement("update mahasiswa set NIM=?, Nama=?, Penjurusan=? where NIM=?");
-          ps.setString(1, NIM);
-          ps.setString(2, NAMA);
-          ps.setString(3, PENJURUSAN);
-          ps.setString(4, Update_NIM);
-          System.out.println(ps);
-          ps.executeUpdate();
-      } catch (Exception e) {
-          System.out.println(e);
-      }
-
-      return "/index.xhtml?faces-redirect=true";   
+            Koneksi obj_koneksi = new Koneksi();
+            Connection connection = obj_koneksi.get_connection();
+            PreparedStatement ps = connection.prepareStatement("update mahasiswa set NIM=?, Nama=?, id_penjurusan=? where NIM=?");
+            ps.setString(1, NIM);
+            ps.setString(2, NAMA);
+            ps.setString(3, PENJURUSAN);
+            ps.setString(4, Update_NIM);
+            if (PENJURUSAN.equals("1") || PENJURUSAN.equalsIgnoreCase("Multimedia")) {
+                PreparedStatement pb = connection.prepareStatement("update mahasiswa set NIM=?, Nama=?, id_penjurusan='1' where NIM=?");
+                pb.setString(1, NIM);
+                pb.setString(2, NAMA);
+                pb.setString(3, Update_NIM);
+                pb.executeUpdate();
+                return "/index.xhtml?faces-redirect=true";
+            }
+            else if (PENJURUSAN.equals("2") || PENJURUSAN.equalsIgnoreCase("Embedded")) {
+                PreparedStatement pb = connection.prepareStatement("update mahasiswa set NIM=?, Nama=?, id_penjurusan='2' where NIM=?");
+                pb.setString(1, NIM);
+                pb.setString(2, NAMA);
+                pb.setString(3, Update_NIM);
+                pb.executeUpdate();
+                return "/index.xhtml?faces-redirect=true";
+            }
+            else if (PENJURUSAN.equals("3") || PENJURUSAN.equalsIgnoreCase("Software")) {
+                PreparedStatement pb = connection.prepareStatement("update mahasiswa set NIM=?, Nama=?, id_penjurusan='3' where NIM=?");
+                pb.setString(1, NIM);
+                pb.setString(2, NAMA);
+                pb.setString(3, Update_NIM);
+                pb.executeUpdate();
+                return "/index.xhtml?faces-redirect=true";
+            }
+            else if (PENJURUSAN.equals("4") || PENJURUSAN.equalsIgnoreCase("Jaringan")) {
+                PreparedStatement pb = connection.prepareStatement("update mahasiswa set NIM=?, Nama=?, id_penjurusan='4' where NIM=?");
+                pb.setString(1, NIM);
+                pb.setString(2, NAMA);
+                pb.setString(3, Update_NIM);
+                pb.executeUpdate();
+                return "/index.xhtml?faces-redirect=true";
+            }
+            else{
+                System.out.println("Tolong masukkan penjurusan yang benar.");
+                return "/EditError.xhtml?faces-redirect=false";
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return PENJURUSAN; 
   }
     
-    public ArrayList getGet_all_mahasiswa() throws Exception{
-        ArrayList list_of_mahasiswa=new ArrayList();
+    public ArrayList getGet_all_Mahasiswa() throws Exception{
+        ArrayList list_of_Mahasiswa=new ArrayList();
              Connection connection=null;
         try {
             Koneksi obj_koneksi = new Koneksi();
             connection = obj_koneksi.get_connection();
             Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery("Select * from mahasiswa");
+            ResultSet rs = st.executeQuery("Select NIM, Nama, nama_penjurusan from mahasiswa, penjurusan where id_penjurusan=id order by NIM asc");
+                    
             while(rs.next()){
                 Mahasiswa obj_Mahasiswa = new Mahasiswa();
                 obj_Mahasiswa.setNIM(rs.getString("NIM"));
                 obj_Mahasiswa.setNAMA(rs.getString("Nama"));
-                obj_Mahasiswa.setPENJURUSAN(rs.getString("Penjurusan"));
-                list_of_mahasiswa.add(obj_Mahasiswa);
+                obj_Mahasiswa.setPENJURUSAN(rs.getString("nama_penjurusan"));
+                list_of_Mahasiswa.add(obj_Mahasiswa);
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -135,7 +174,7 @@ public class Mahasiswa {
                 connection.close();
             }
         }
-        return list_of_mahasiswa;
+        return list_of_Mahasiswa;
     }
     
   public String Tambah_Mahasiswa(){
@@ -143,14 +182,37 @@ public class Mahasiswa {
           Connection connection=null;
           Koneksi obj_koneksi = new Koneksi();
           connection = obj_koneksi.get_connection();
-          PreparedStatement ps=connection.prepareStatement("insert into mahasiswa(NIM, Nama, Penjurusan) value('"+NIM+"','"+NAMA+"','"+PENJURUSAN+"')");
-          ps.executeUpdate();
-      } catch (Exception e) {
-          System.out.println(e);
-      }
-        return "/index.xhtml?faces-redirect=true";
+          PreparedStatement ps = connection.prepareStatement("insert into mahasiswa(NIM, Nama, id_penjurusan) value('" + NIM + "','" + NAMA + "','" + PENJURUSAN + "')");
+            if (PENJURUSAN.equals("1") || PENJURUSAN.equalsIgnoreCase("Multimedia")){
+               PreparedStatement pl = connection.prepareStatement("insert into mahasiswa(NIM, Nama, id_penjurusan) value('" + NIM + "','" + NAMA + "','1')");
+               pl.executeUpdate(); 
+               return "/index.xhtml?faces-redirect=true";
+            }else if (PENJURUSAN.equals("2") || PENJURUSAN.equalsIgnoreCase("Embedded")){
+               PreparedStatement pl = connection.prepareStatement("insert into mahasiswa(NIM, Nama, id_penjurusan) value('" + NIM + "','" + NAMA + "','2')");
+               pl.executeUpdate(); 
+               return "/index.xhtml?faces-redirect=true";
+            }else if (PENJURUSAN.equals("3") || PENJURUSAN.equalsIgnoreCase("Software")){
+               PreparedStatement pl = connection.prepareStatement("insert into mahasiswa(NIM, Nama, id_penjurusan) value('" + NIM + "','" + NAMA + "','3')");
+               pl.executeUpdate();
+               return "/index.xhtml?faces-redirect=true";
+            }else if (PENJURUSAN.equals("4")|| PENJURUSAN.equalsIgnoreCase("Jaringan")){
+               PreparedStatement pl = connection.prepareStatement("insert into mahasiswa(NIM, Nama, id_penjurusan) value('" + NIM + "','" + NAMA + "','4')");
+               pl.executeUpdate();
+               return "/index.xhtml?faces-redirect=true";
+            }else {
+                System.out.println("Tolong masukkan data penjurusan yang benar.");
+                return "/TambahError.xhtml?faces-redirect=true";
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return PENJURUSAN;
   }
-    
-  public Mahasiswa() {}
+
+    /**
+     * Creates a new instance of Mahasiswa
+     */
+    public Mahasiswa() {
+    }
     
 }
